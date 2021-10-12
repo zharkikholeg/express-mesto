@@ -2,15 +2,21 @@ const mongoose = require('mongoose');
 const { userSchema } = require('./user')
 
 const cardSchema = new mongoose.Schema({
-  name: { 
-    type: String, 
-    required: true, 
-    minlength: 2, 
-    maxlength: 30, 
+  name: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
   },
   link: {
     type: String,
     required: true,
+    validate: {
+      validator: function (val) {
+        return val.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
+      },
+      message: "Введите валидный url"
+    }
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -21,7 +27,7 @@ const cardSchema = new mongoose.Schema({
     default: []
   },
   createdAt: {
-    type: Date, 
+    type: Date,
     default: Date.now
   }
 })
