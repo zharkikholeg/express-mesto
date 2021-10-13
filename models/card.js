@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { userSchema } = require('./user')
+const { userSchema } = require('./user');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -12,27 +12,25 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function (val) {
+      validator(val) {
         return val.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
       },
-      message: "Введите валидный url"
-    }
+      message: 'Введите валидный url',
+    },
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user'
+    ref: 'user',
   },
   likes: {
     type: [mongoose.Schema.Types.ObjectId],
-    default: []
+    default: [],
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
-})
-
-
+    default: Date.now,
+  },
+});
 
 // создаём модель и экспортируем её
 module.exports = mongoose.model('card', cardSchema);

@@ -19,32 +19,30 @@ const userSchema = new mongoose.Schema({
     type: String, // имя — это строка
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validate: {
-      validator: function (val) {
+      validator(val) {
         return val.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
       },
-      message: "Введите валидный url"
-    }
+      message: 'Введите валидный url',
+    },
   },
   email: {
     type: String,
     required: true,
     unique: true,
     validate: {
-      validator: function (val) {
+      validator(val) {
         return validator.isEmail(val);
       },
-      message: "Введите валидный email"
-    }
+      message: 'Введите валидный email',
+    },
   },
   password: {
     type: String,
     required: true,
-    select: false
-  }
+    select: false,
+  },
 });
-
-
 
 // создаём модель и экспортируем её
 module.exports = mongoose.model('user', userSchema);
-//module.exports = userSchema;
+// module.exports = userSchema;
