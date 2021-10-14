@@ -15,7 +15,6 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        // return res.status(400).send({ message: 'Переданы некорректные данные при создании карточки' });
         const err = new Error('Переданы некорректные данные при создании карточки');
         err.statusCode = 400;
         return next(err);
@@ -41,8 +40,8 @@ module.exports.deleteCard = (req, res, next) => {
           _id: req.params.cardId,
           owner: reqId,
         })
-          .then((card) => {
-            res.send(card);
+          .then((cardResult) => {
+            res.send(cardResult);
           });
       } else {
         const err = new Error('Карточка с указанным _id не найдена или вы не являетесь владельцем этой карточки');
@@ -81,7 +80,6 @@ module.exports.cardAddLike = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        // return res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка' });
         const err = new Error('Переданы некорректные данные для постановки лайка');
         err.statusCode = 400;
         return next(err);

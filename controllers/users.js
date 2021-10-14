@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const express = require('express');
 const User = require('../models/user');
 
 module.exports.createUser = (req, res, next) => {
@@ -15,14 +14,12 @@ module.exports.createUser = (req, res, next) => {
         name, about, avatar, email, password,
       })
         .then((user) => {
-          user = user.toObject();
-          delete user.password;
-          console.log(user);
-          res.send(user);
+          const newUser = user.toObject();
+          delete newUser.password;
+          res.send(newUser);
         })
         .catch((err) => {
-          if (err.name == 'ValidationError') {
-            // return res.status(400).send({ message: 'Переданы некорректные данные при создании пользователя' });
+          if (err.name === 'ValidationError') {
             const err = new Error('Переданы некорректные данные при создании пользователя');
             err.statusCode = 400;
             return next(err);
@@ -97,7 +94,6 @@ module.exports.updateUser = (req, res, next) => {
         return next(err);
       }
       if (err.name === 'ValidationError') {
-        // return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         const err = new Error('Переданы некорректные данные при обновлении профиля');
         err.statusCode = 400;
         return next(err);
@@ -130,7 +126,6 @@ module.exports.updateAvatar = (req, res, next) => {
         return next(err);
       }
       if (err.name === 'ValidationError') {
-        // return res.status(400).send({ message: 'Переданы некорректные данные при обновлении профиля' });
         const err = new Error('Переданы некорректные данные при обновлении профиля');
         err.statusCode = 400;
         return next(err);
@@ -175,7 +170,7 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.getUserMe = (req, res) => {
+module.exports.getUserMe = (req, res, next) => {
   // console.log("called")
   const id = req.user._id;
   // console.log(id);
