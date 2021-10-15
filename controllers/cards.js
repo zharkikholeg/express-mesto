@@ -45,13 +45,18 @@ module.exports.deleteCard = (req, res, next) => {
           });
       } else {
         const err = new Error('Карточка с указанным _id не найдена или вы не являетесь владельцем этой карточки');
-        err.statusCode = 403;
+        err.statusCode = 404;
         return next(err);
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         // return res.status(400).send({ message: 'Карточка с указанным _id не найдена' });
+        const err = new Error('Карточка с указанным _id не найдена');
+        err.statusCode = 404;
+        return next(err);
+      }
+      if (err.name === 'NotFound') {
         const err = new Error('Карточка с указанным _id не найдена');
         err.statusCode = 404;
         return next(err);
@@ -84,6 +89,11 @@ module.exports.cardAddLike = (req, res, next) => {
         err.statusCode = 400;
         return next(err);
       }
+      if (err.name === 'NotFound') {
+        const err = new Error('Карточка с указанным _id не найдена');
+        err.statusCode = 404;
+        return next(err);
+      }
       const err2 = new Error('На сервере произошла ошибка');
       err2.statusCode = 500;
       return next(err2);
@@ -110,6 +120,11 @@ module.exports.deleteCardLike = (req, res, next) => {
       if (err.name === 'CastError') {
         const err = new Error('Переданы некорректные данные для постановки лайка');
         err.statusCode = 400;
+        return next(err);
+      }
+      if (err.name === 'NotFound') {
+        const err = new Error('Карточка с указанным _id не найдена');
+        err.statusCode = 404;
         return next(err);
       }
       const err2 = new Error('На сервере произошла ошибка');

@@ -54,6 +54,10 @@ app.use(auth);
 app.use('/users', usersRoute);
 app.use('/cards', cardsRoute);
 
+app.get('*', (req, res) => {
+  res.status(404).send({ message: 'Ресурс не найден' });
+});
+
 app.use(errors);
 
 app.listen(port, () => {

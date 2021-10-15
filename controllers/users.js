@@ -24,6 +24,11 @@ module.exports.createUser = (req, res, next) => {
             err.statusCode = 400;
             return next(err);
           }
+          if (err.message === 'Validation failed') {
+            const err = new Error('Переданы некорректные данные при создании пользователя');
+            err.statusCode = 400;
+            return next(err);
+          }
           if (err.name === 'MongoServerError') {
             const err = new Error('При регистрации указан email, который уже существует на сервере');
             err.statusCode = 409;
@@ -61,6 +66,11 @@ module.exports.getUserById = (req, res, next) => {
       if (err.name === 'CastError') {
         const err = new Error('Пользователь по указанному _id не найден');
         err.statusCode = 400;
+        return next(err);
+      }
+      if (err.name === 'NotFound') {
+        const err = new Error('Пользователь по указанному _id не найден');
+        err.statusCode = 404;
         return next(err);
       }
       // res.status(500).send({ message: 'Произошла ошибка' });
