@@ -52,13 +52,13 @@ module.exports.getUserById = (req, res, next) => {
   // console.log("called 3")
   const id = req.params.userId;
 
-  User.find({ _id: id })
+  User.findById({ _id: id })
     .then((user) => {
       if (user) {
         res.send(user);
       } else {
         const err = new Error('Пользователь по указанному _id не найден');
-        err.statusCode = 400;
+        err.statusCode = 404;
         return next(err);
       }
     })

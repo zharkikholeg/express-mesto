@@ -35,7 +35,13 @@ module.exports.deleteCard = (req, res, next) => {
     owner: reqId,
   })
     .then((card) => {
-      if (card) {
+      if (!card) {
+        const err = new Error('Карточка с указанным _id не найдена');
+        err.statusCode = 404;
+        return next(err);
+      }
+      if (card.owner === reqId) {
+        console.log(card.owner === reqId)
         Card.findOneAndRemove({
           _id: req.params.cardId,
           owner: reqId,
@@ -44,8 +50,8 @@ module.exports.deleteCard = (req, res, next) => {
             res.send(cardResult);
           });
       } else {
-        const err = new Error('Карточка с указанным _id не найдена или вы не являетесь владельцем этой карточки');
-        err.statusCode = 404;
+        const err = new Error('Вы не являетесь владельцем этой карточки');
+        err.statusCode = 403;
         return next(err);
       }
     })
@@ -63,6 +69,7 @@ module.exports.deleteCard = (req, res, next) => {
       }
       const err2 = new Error('На сервере произошла ошибка');
       err2.statusCode = 500;
+      console.log(err2.name)
       return next(err2);
     })
     .catch(next);
