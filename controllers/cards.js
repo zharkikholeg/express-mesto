@@ -41,7 +41,6 @@ module.exports.deleteCard = (req, res, next) => {
         return next(err);
       }
       if (card.owner === reqId) {
-        console.log(card.owner === reqId)
         Card.findOneAndRemove({
           _id: req.params.cardId,
           owner: reqId,
@@ -69,7 +68,6 @@ module.exports.deleteCard = (req, res, next) => {
       }
       const err2 = new Error('На сервере произошла ошибка');
       err2.statusCode = 500;
-      console.log(err2.name)
       return next(err2);
     })
     .catch(next);
